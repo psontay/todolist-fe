@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:todolist/entities/TaskResponse.dart';
 
 import 'TokenStorage.dart';
 
@@ -33,6 +34,70 @@ class TaskService {
       } catch (e) {
         throw Exception('Create Failed: ${response.reasonPhrase}');
       }
+    }
+  }
+
+  static Future<List<TaskResponse>> getAllTasks() async {
+    final url = Uri.parse('$_baseUrl/tasks/list');
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found . Please login again.");
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return List<TaskResponse>.from(
+          data.map((json) => TaskResponse.fromJson(json)));
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Failed to fetch tasks');
+    }
+  }
+
+  static Future<void> updateTask(
+      String id, String title, String status, DateTime deadline) async {
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found. Please login again.");
+
+    final url = Uri.parse('$_baseUrl/tasks/updateTask/$id');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'title': title,
+        'status': status,
+        'deadline': deadline.toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Update failed');
+    }
+  }
+
+  static Future<void> deleteTask(String id) async {
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found . Please try again");
+    final url = Uri.parse('$_baseUrl/tasks/deleteTask/$id');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode != 200) {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Delete failed');
     }
   }
 }

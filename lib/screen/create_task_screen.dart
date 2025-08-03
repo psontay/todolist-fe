@@ -31,7 +31,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             content: Text("Create Success"), backgroundColor: Colors.green),
       );
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+          context, MaterialPageRoute(builder: (_) => HomeScreen()));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
@@ -54,8 +54,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 onCreatePressed: handleCreateTask),
             const SizedBox(height: 16),
             TextButton(
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen())),
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => HomeScreen())),
                 child: const Text(
                   "Create Task",
                   style: TextStyle(color: Colors.green),

@@ -53,15 +53,17 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
     try {
       final deadline = DateTime.parse(deadlineStr);
       await TaskService.createTask(title, deadline);
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Task created')),
       );
     } catch (e) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+        Navigator.pop(context);
+      }
     }
   }
 

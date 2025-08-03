@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/screen/login_screen.dart';
+import 'package:todolist/widgets/TaskList.dart';
 import 'package:todolist/widgets/create_task_dialog.dart';
 
+import 'login_screen.dart';
+
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final GlobalKey<TaskListWidgetState> _taskListKey = GlobalKey();
 
   void _handleLogout(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
+  }
+
+  void _showCreateDialog(BuildContext context) async {
+    final created = await showDialog<bool>(
+      context: context,
+      builder: (_) => const CreateTaskDialog(),
+    );
+
+    if (created == true) {
+      _taskListKey.currentState?.refresh();
+    }
   }
 
   @override
@@ -29,12 +44,7 @@ class HomeScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.add),
           tooltip: 'Create Task',
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => const CreateTaskDialog(),
-            );
-          },
+          onPressed: () => _showCreateDialog(context),
         ),
         actions: [
           IconButton(
@@ -43,12 +53,7 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const Center(
-        child: Text(
-          'Welcome to Home Screen!',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-      ),
+      body: TaskListWidget(key: _taskListKey),
     );
   }
 }
