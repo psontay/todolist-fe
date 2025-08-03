@@ -1,45 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/screen/login_screen.dart';
-import 'package:todolist/services/authenticateServices.dart';
-import 'package:todolist/widgets/signup_form.dart';
+import 'package:todolist/widgets/resetPasswordEmail_form.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+import '../services/authenticateServices.dart';
 
+class ResetPasswordEmailScreen extends StatefulWidget {
+  const ResetPasswordEmailScreen({super.key});
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<ResetPasswordEmailScreen> createState() =>
+      _ResetPasswordEmailScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _ResetPasswordEmailScreenState extends State<ResetPasswordEmailScreen> {
   final _emailController = TextEditingController();
-
-  Future<void> _handleSignup() async {
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
+  Future<void> _handleResetPasswordEmail() async {
     final email = _emailController.text.trim();
 
-    String? error;
-    if (username.isEmpty) {
-      error = "Name is required";
-    } else if (password.length < 6) {
-      error = "Password must be at least 6 characters";
-    } else if (email.isEmpty ||
+    if (email.isEmpty ||
         (!email.endsWith("@gmail.com") && !email.endsWith(".edu.vn"))) {
-      error = "Valid email required (gmail.com or .edu.vn)";
-    }
-
-    if (error != null) {
-      _showMessage(error);
+      _showMessage("Valid email required (gmail.com or .edu.vn)");
       return;
     }
 
     try {
-      await AuthService.signup(username, password, email);
-      _showMessage("Signup success! Please login.");
+      final message = await AuthService.resetPasswordEmail(email);
+      _showMessage(message);
     } catch (e) {
-      _showMessage("Signup failed: ${e.toString()}");
+      _showMessage("Sent email failed: ${e.toString()}");
     }
   }
 
@@ -51,8 +38,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
     _emailController.dispose();
     super.dispose();
   }
@@ -67,11 +52,9 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SignupForm(
-                usernameController: _usernameController,
-                passwordController: _passwordController,
+              ResetPasswordEmailForm(
                 emailController: _emailController,
-                onSubmit: _handleSignup,
+                onSendPressed: _handleResetPasswordEmail,
               ),
               const SizedBox(height: 16),
               TextButton(
@@ -80,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   MaterialPageRoute(builder: (_) => const LoginScreen()),
                 ),
                 child: const Text(
-                  "LOGIN",
+                  "Login",
                   style: TextStyle(color: Colors.green),
                 ),
               ),

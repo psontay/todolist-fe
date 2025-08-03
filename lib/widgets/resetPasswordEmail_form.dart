@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SignupForm extends StatelessWidget {
-  final TextEditingController usernameController;
-  final TextEditingController passwordController;
+class ResetPasswordEmailForm extends StatelessWidget {
   final TextEditingController emailController;
-  final VoidCallback onSubmit;
-
-  const SignupForm({
+  final VoidCallback onSendPressed;
+  const ResetPasswordEmailForm({
     super.key,
-    required this.usernameController,
-    required this.passwordController,
     required this.emailController,
-    required this.onSubmit,
+    required this.onSendPressed,
   });
 
   @override
@@ -27,19 +22,17 @@ class SignupForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "SIGN UP",
-            style: TextStyle(fontSize: 24, color: Colors.white),
+            'Reset Password By Email',
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           const SizedBox(height: 24),
-          _buildField(usernameController, "Username"),
-          const SizedBox(height: 16),
-          _buildField(passwordController, "Password", obscure: true),
-          const SizedBox(height: 16),
-          _buildField(emailController, "Email"),
-          const SizedBox(height: 24),
+          _buildField(emailController, 'Email'),
           ElevatedButton(
-            onPressed: onSubmit,
-            child: const Text("Confirm"),
+            onPressed: onSendPressed,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.green,
+            ),
+            child: const Text("Send"),
           ),
         ],
       ),
