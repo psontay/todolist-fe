@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:todolist/constants.dart';
 import 'package:todolist/services/TokenStorage.dart';
 
 class AuthService {
-  static const _baseUrl = 'http://192.168.1.2:8080';
+  static const _baseUrl = BASE_URL;
 
   static Future<void> login(String name, String password) async {
     final url = Uri.parse('$_baseUrl/auth/login');

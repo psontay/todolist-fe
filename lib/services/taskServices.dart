@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:todolist/constants.dart';
 import 'package:todolist/entities/TaskResponse.dart';
 
 import 'TokenStorage.dart';
 
 class TaskService {
-  static const _baseUrl = 'http://192.168.1.2:8080';
+  static const _baseUrl = BASE_URL;
   static Future<void> createTask(String title, DateTime deadline) async {
     final url = Uri.parse('$_baseUrl/tasks/create');
     final token = await TokenStorage.getToken();

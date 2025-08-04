@@ -76,8 +76,14 @@ class TaskListWidgetState extends State<TaskListWidget> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        Text("Deadline: \'${task.deadline}'",
-                            style: TextStyle(color: Colors.grey[400])),
+                        Text(
+                          "Created At: ${DateFormat('yyyy-MM-dd HH:mm').format(task.createdAt)}",
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                        Text(
+                          "Deadline: ${DateFormat('yyyy-MM-dd HH:mm').format(task.deadline)}",
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
                         Text("Status: \'${task.status}'",
                             style: TextStyle(color: Colors.grey[400])),
                       ],

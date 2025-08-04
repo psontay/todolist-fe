@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/widgets/TaskList.dart';
 import 'package:todolist/widgets/create_task_dialog.dart';
 
+import 'ProfileScreen.dart';
 import 'login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,6 +14,13 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  void _profileManagement(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => ProfileScreen()),
     );
   }
 
@@ -47,6 +55,16 @@ class HomeScreen extends StatelessWidget {
           onPressed: () => _showCreateDialog(context),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            tooltip: 'Profile',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _handleLogout(context),
