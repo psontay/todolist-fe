@@ -1,2 +1,2 @@
 # todolist-fe
-front-end for todolist
+front-end for todolist using flutter 
