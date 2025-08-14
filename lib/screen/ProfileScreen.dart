@@ -12,16 +12,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _loading = true;
+  String? _error;
+  UserResponse? _user;
   @override
   void initState() {
     super.initState();
-    _redirectBasedOnRole();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadAndRedirect());
   }
 
-  Future<void> _redirectBasedOnRole() async {
+  Future<void> _loadAndRedirect() async {
+    setState(() => _loading = true);
     try {
       UserResponse user = await UserService.profile();
-
       if (user.roles.contains('ADMIN')) {
         Navigator.pushReplacement(
           context,
@@ -30,24 +33,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const UserProfileScreen()),
+          MaterialPageRoute(builder: (_) => UserProfileScreen(user: user)),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load profile: $e')),
-      );
-      Navigator.pop(context);
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() => _loading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    if (_loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Failed to load profile: $_error'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _loadAndRedirect,
+                child: const Text('Retry'),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }

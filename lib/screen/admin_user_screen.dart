@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/entities/TaskResponse.dart';
 import 'package:todolist/entities/UserResponse.dart';
+import 'package:todolist/screen/HomeScreen.dart';
 import 'package:todolist/services/UserService.dart';
 import 'package:todolist/widgets/admin_user_edit_form.dart';
 
@@ -65,6 +66,13 @@ class _AdminUserScreenState extends State<AdminUserScreen> {
     }
   }
 
+  void _handleBack(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => HomeScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +80,10 @@ class _AdminUserScreenState extends State<AdminUserScreen> {
         title: const Text('Admin User Management'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => _handleBack(context),
+        ),
       ),
       backgroundColor: Colors.black,
       body: Padding(

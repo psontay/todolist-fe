@@ -11,7 +11,7 @@ class UserService {
   static const _baseUrl = BASE_URL;
 
   static Future<UserResponse> profile() async {
-    final url = Uri.parse('$_baseUrl/users/profile');
+    final url = Uri.parse('$_baseUrl/users/me');
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found. Please login again.");
     final response = await http.get(url, headers: {

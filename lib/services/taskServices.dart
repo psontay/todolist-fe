@@ -3,17 +3,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:todolist/constants.dart';
 import 'package:todolist/entities/TaskResponse.dart';
+import 'package:todolist/entities/TaskStatus.dart';
 
 import 'TokenStorage.dart';
 
 class TaskService {
   static const _baseUrl = BASE_URL;
+  static final _taskCrudUrl = Uri.parse('$_baseUrl/tasks');
   static Future<void> createTask(String title, DateTime deadline) async {
-    final url = Uri.parse('$_baseUrl/tasks/create');
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found. Please login again.");
     final response = await http.post(
-      url,
+      _taskCrudUrl,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -39,11 +40,10 @@ class TaskService {
   }
 
   static Future<List<TaskResponse>> getAllTasks() async {
-    final url = Uri.parse('$_baseUrl/tasks/list');
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found . Please login again.");
     final response = await http.get(
-      url,
+      _taskCrudUrl,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -64,7 +64,7 @@ class TaskService {
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found. Please login again.");
 
-    final url = Uri.parse('$_baseUrl/tasks/updateTask/$id');
+    final url = Uri.parse('$_taskCrudUrl/$id');
 
     final response = await http.put(
       url,
@@ -88,7 +88,7 @@ class TaskService {
   static Future<void> deleteTask(String id) async {
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found . Please try again");
-    final url = Uri.parse('$_baseUrl/tasks/deleteTask/$id');
+    final url = Uri.parse('$_taskCrudUrl/$id');
     final response = await http.delete(
       url,
       headers: {
@@ -99,6 +99,40 @@ class TaskService {
     if (response.statusCode != 200) {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Delete failed');
+    }
+  }
+
+  static Future<void> searchTasksKeyword(String keyword) async {
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found . Please try again");
+    final url = Uri.parse('$_taskCrudUrl/search?keyword=$keyword');
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode != 200) {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Search Failed');
+    }
+  }
+
+  static Future<void> getTasksByStatus(TaskStatus taskStatus) async {
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found . Please try again");
+    final url = Uri.parse('$_taskCrudUrl/&$taskStatus');
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Beareer $token',
+      },
+    );
+    if (response.statusCode != 200) {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Fetched tasks by status failed');
     }
   }
 }

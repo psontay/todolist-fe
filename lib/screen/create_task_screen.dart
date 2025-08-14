@@ -16,8 +16,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     final title = _titleController.text.trim();
     final deadlineStr = _deadlineController.text.trim();
     if (title.isEmpty || deadlineStr.isEmpty) {
-      final msg =
-          title.isEmpty ? "Username is required" : "Password is required";
+      final msg = title.isEmpty ? "Title is required" : "Deadline is required";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(msg), backgroundColor: Colors.red),
       );
@@ -28,7 +27,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       await TaskService.createTask(title, deadline);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text("Create Success"), backgroundColor: Colors.green),
+            content: Text("Create Task Success"),
+            backgroundColor: Colors.green),
       );
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => HomeScreen()));
