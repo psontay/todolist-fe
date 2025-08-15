@@ -1,4 +1,4 @@
-À, hiểu rồi! Bạn muốn README cho **ToDoList Frontend (FE)** bằng tiếng Anh, tương tự phong cách của BE bạn gửi. Dưới đây là phiên bản chuẩn:
+
 
 ---
 
