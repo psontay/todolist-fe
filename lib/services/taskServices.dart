@@ -102,7 +102,7 @@ class TaskService {
     }
   }
 
-  static Future<void> searchTasksKeyword(String keyword) async {
+  static Future<List<TaskResponse>> searchTasksKeyword(String keyword) async {
     final token = await TokenStorage.getToken();
     if (token == null) throw Exception("Token not found . Please try again");
     final url = Uri.parse('$_taskCrudUrl/search?keyword=$keyword');
@@ -117,6 +117,8 @@ class TaskService {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Search Failed');
     }
+    final List<dynamic> jsonData = jsonDecode(response.body)['data'];
+    return jsonData.map((e) => TaskResponse.fromJson(e)).toList();
   }
 
   static Future<void> getTasksByStatus(TaskStatus taskStatus) async {

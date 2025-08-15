@@ -41,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _showSearchTaskDialog(BuildContext context) async {
-    final created = await showDialog<bool>(
+  void _showSearchTaskDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (_) => const SearchTaskDialog(),
     );
