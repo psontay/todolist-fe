@@ -85,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
+                _taskListKey.currentState?.sortByStatus();
                 print("Sort by status");
               },
             ),

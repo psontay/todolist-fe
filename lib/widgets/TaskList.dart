@@ -25,6 +25,12 @@ class TaskListWidgetState extends State<TaskListWidget> {
     });
   }
 
+  void sortByStatus() {
+    setState(() {
+      _futureTasks = TaskService.getTasksSortedByStatus();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TaskResponse>>(

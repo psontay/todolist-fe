@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:todolist/constants.dart';
 import 'package:todolist/entities/TaskResponse.dart';
+import 'package:todolist/entities/TaskSearchResponse.dart';
 import 'package:todolist/entities/TaskStatus.dart';
 
 import 'TokenStorage.dart';
@@ -113,12 +114,14 @@ class TaskService {
         'Authorization': 'Bearer $token',
       },
     );
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final taskSearch = TaskSearchResponse.fromJson(data['data']);
+      return taskSearch.results;
+    } else {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Search Failed');
     }
-    final List<dynamic> jsonData = jsonDecode(response.body)['data'];
-    return jsonData.map((e) => TaskResponse.fromJson(e)).toList();
   }
 
   static Future<void> getTasksByStatus(TaskStatus taskStatus) async {
@@ -129,12 +132,33 @@ class TaskService {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Beareer $token',
+        'Authorization': 'Bearer $token',
       },
     );
     if (response.statusCode != 200) {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Fetched tasks by status failed');
+    }
+  }
+
+  static Future<List<TaskResponse>> getTasksSortedByStatus() async {
+    final token = await TokenStorage.getToken();
+    if (token == null) throw Exception("Token not found . Please try again");
+    final url = Uri.parse('$_taskCrudUrl/sort/status');
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print('${response.body}');
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = json.decode(response.body);
+      final List<dynamic> taskList = jsonData['data'];
+      return taskList.map((e) => TaskResponse.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to load tasks sorted by status");
     }
   }
 }
