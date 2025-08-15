@@ -117,7 +117,7 @@ flutter run
 
 ## 📮 Contact
 
-Made with ❤️ by **@sontay226**
+Made with ❤️ by **@psontay**
 Feel free to contribute or report issues.
 
 ---
