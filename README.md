@@ -61,7 +61,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/sontay226/todolist-fe.git
+git clone https://github.com/psontay/todolist-fe.git
 cd todolist-fe
 
 # Get dependencies
