@@ -28,7 +28,7 @@ class _AdminUserScreenState extends State<AdminUserScreen> {
       final user = await UserService.getUserByEmail(query);
       setState(() {
         _selectedUser = user;
-        _nameController.text = user.name;
+        _nameController.text = user.username;
         _emailController.text = user.email;
         _passwordController.clear();
       });

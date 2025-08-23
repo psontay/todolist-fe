@@ -23,7 +23,7 @@ class UserProfileScreen extends StatelessWidget {
           children: [
             // User info
             Text(
-              user.name,
+              user.username,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,

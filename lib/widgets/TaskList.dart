@@ -31,6 +31,12 @@ class TaskListWidgetState extends State<TaskListWidget> {
     });
   }
 
+  void sortByDeadline() {
+    setState(() {
+      _futureTasks = TaskService.getTasksSortedByDeadline();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TaskResponse>>(
@@ -269,11 +275,13 @@ class TaskListWidgetState extends State<TaskListWidget> {
               try {
                 Navigator.pop(context);
                 await TaskService.deleteTask(taskId);
+                if (!mounted) return;
                 _loadTasks();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Task deleted")),
                 );
               } catch (e) {
+                if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(e.toString())),
                 );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/screen/task_statistics_screen.dart';
 import 'package:todolist/widgets/TaskList.dart';
 import 'package:todolist/widgets/create_task_dialog.dart';
 
@@ -66,8 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pop(context);
-                print("Statistics task");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const TaskStatisticsScreen()));
               },
             ),
             ListTile(
@@ -76,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
+                _taskListKey.currentState?.sortByDeadline();
                 print("Sort by deadline");
               },
             ),
